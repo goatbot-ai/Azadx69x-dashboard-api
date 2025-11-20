@@ -5,7 +5,7 @@ const meta = {
   name: "Top Anime",
   version: "1.0.0",
   description: "Fetches top anime from MyAnimeList",
-  author: "Rynn", 
+  author: "Azad 💥", 
   method: "get",
   category: "anime",
   path: "/topanime"
