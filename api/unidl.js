@@ -5,7 +5,7 @@ module.exports = {
     name: "Universal Downloader",
     version: "1.0.0",
     description: "Universal Downloader for TikTok, Facebook, Instagram, etc.",
-    author: "Jr Busaco",
+    author: "Azad 💥",
     method: "get",
     path: "/unidl?url=",
     category: "downloader"
