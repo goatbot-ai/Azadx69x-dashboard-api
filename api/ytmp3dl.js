@@ -4,7 +4,7 @@ module.exports = {
   meta: {
     name: "YouTube Mp3 Downloader",
     version: "1.0.0",
-    author: "Jr Busaco",
+    author: "Azad 💥",
     method: "get",
     description: "Download music tracks",
     path: "/ytmp3dl?url=",
