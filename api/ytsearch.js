@@ -5,7 +5,7 @@ module.exports = {
     name: "YouTube Search",
     version: "1.0.0",
     description: "Search on YouTube",
-    author: "Jr Busaco",
+    author: "Azad 💥",
     method: "get",
     path: "/ytsearch?query=",
     category: "search"
