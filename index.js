@@ -10,31 +10,31 @@ const PORT = process.env.PORT || 4000;
 app.enable("trust proxy");
 app.set("json spaces", 2);
 
-// Middleware to parse JSON and URL-encoded bodies, ensuring req.body is available for POST APIs
+// Middleware to parse JSON and URL-encoded bodies
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-// Serve static files from the "web" folder
+// Serve static files from "web" folder
 app.use('/', express.static(path.join(__dirname, 'web')));
 
-// Expose settings.json at the root
+// Serve settings.json at root
 app.get('/settings.json', (req, res) => {
   res.sendFile(path.join(__dirname, 'settings.json'));
 });
 
-// Load settings for middleware
+// Load settings
 const settingsPath = path.join(__dirname, 'settings.json');
 const settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
 
-// Middleware to augment JSON responses, compatible with users.js responses
+// Middleware to augment JSON responses with branding
 app.use((req, res, next) => {
   const originalJson = res.json;
   res.json = function (data) {
     if (data && typeof data === 'object') {
       const responseData = {
         status: data.status,
-        operator: (settings.apiSettings && settings.apiSettings.operator) || "Created Using Rynn UI",
+        operator: "Azad's API Dashboard", // Branded operator name
         ...data
       };
       return originalJson.call(this, responseData);
@@ -44,43 +44,42 @@ app.use((req, res, next) => {
   next();
 });
 
-// Load API modules from the "api" folder and its subfolders recursively
+// Load API modules recursively from "api" folder
 const apiFolder = path.join(__dirname, 'api');
 let totalRoutes = 0;
 const apiModules = [];
 
-// Recursive function to load modules
 const loadModules = (dir) => {
   fs.readdirSync(dir).forEach((file) => {
     const filePath = path.join(dir, file);
     if (fs.statSync(filePath).isDirectory()) {
-      loadModules(filePath); // Recurse into subfolder
+      loadModules(filePath);
     } else if (fs.statSync(filePath).isFile() && path.extname(file) === '.js') {
       try {
         const module = require(filePath);
-        // Validate module structure expected by index.js
         if (!module.meta || !module.onStart || typeof module.onStart !== 'function') {
-          console.warn(chalk.bgHex('#FF9999').hex('#333').bold(`Invalid module in ${filePath}: Missing or invalid meta/onStart`));
+          console.warn(chalk.bgHex('#FF9999').hex('#333').bold(`Invalid module: ${filePath}`));
           return;
         }
 
         const basePath = module.meta.path.split('?')[0];
-        const routePath = '/api' + basePath; // Prepends /api, compatible with users.js path
-        const method = (module.meta.method || 'get').toLowerCase(); // Handles 'post' from users.js
+        const routePath = '/api' + basePath;
+        const method = (module.meta.method || 'get').toLowerCase();
+
         app[method](routePath, (req, res) => {
-          console.log(chalk.bgHex('#99FF99').hex('#333').bold(`Handling ${method.toUpperCase()} request for ${routePath}`));
-          module.onStart({ req, res }); // Passes req and res to users.js onStart
+          console.log(chalk.bgHex('#99FF99').hex('#333').bold(`Azad's API Dashboard: Handling ${method.toUpperCase()} ${routePath}`));
+          module.onStart({ req, res });
         });
+
         apiModules.push({
           name: module.meta.name,
           description: module.meta.description,
           category: module.meta.category,
           path: routePath + (module.meta.path.includes('?') ? '?' + module.meta.path.split('?')[1] : ''),
-          author: module.meta.author,
+          author: "Azad", // Author updated
           method: module.meta.method || 'get'
         });
         totalRoutes++;
-        console.log(chalk.bgHex('#FFFF99').hex('#333').bold(`Loaded Route: ${module.meta.name} (${method.toUpperCase()})`));
       } catch (error) {
         console.error(chalk.bgHex('#FF9999').hex('#333').bold(`Error loading module ${filePath}: ${error.message}`));
       }
@@ -90,10 +89,9 @@ const loadModules = (dir) => {
 
 loadModules(apiFolder);
 
-console.log(chalk.bgHex('#90EE90').hex('#333').bold('Load Complete! ✓'));
-console.log(chalk.bgHex('#90EE90').hex('#333').bold(`Total Routes Loaded: ${totalRoutes}`));
+console.log(chalk.bgHex('#90EE90').hex('#333').bold(`Azad's API Dashboard Load Complete! Total Routes: ${totalRoutes}`));
 
-// Endpoint to expose API metadata
+// API metadata endpoint
 app.get('/api/info', (req, res) => {
   const categories = {};
   apiModules.forEach(module => {
@@ -104,14 +102,14 @@ app.get('/api/info', (req, res) => {
       name: module.name,
       desc: module.description,
       path: module.path,
-      author: module.author,
+      author: "Azad", // Author updated
       method: module.method
     });
   });
   res.json({ categories: Object.values(categories) });
 });
 
-// Serve index.html for the root route
+// Serve index.html and docs
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'web', 'portal.html'));
 });
@@ -120,21 +118,21 @@ app.get('/docs', (req, res) => {
   res.sendFile(path.join(__dirname, 'web', 'docs.html'));
 });
 
-// 404 error handler
+// 404 handler
 app.use((req, res) => {
   console.log(`404 Not Found: ${req.url}`);
   res.status(404).sendFile(path.join(__dirname, 'web', '404.html'));
 });
 
-// 500 error handler
+// 500 handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).sendFile(path.join(__dirname, 'web', '500.html'));
 });
 
-// Start the server
+// Start server
 app.listen(PORT, () => {
-  console.log(chalk.bgHex('#90EE90').hex('#333').bold(`Server is running on port ${PORT}`));
+  console.log(chalk.bgHex('#90EE90').hex('#333').bold(`Azad's API Dashboard Server running on port ${PORT}`));
 });
 
 module.exports = app;
