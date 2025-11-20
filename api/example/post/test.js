@@ -2,7 +2,7 @@ const meta = {
   name: "login",
   version: "1.0.0",
   description: "Login API endpoint",
-  author: "Your Name", 
+  author: "Azad 💥", 
   method: "post",
   category: "examples",
   path: "/login?username=&password=" // set your desired endpoint path here
@@ -31,7 +31,7 @@ async function onStart({ res, req }) {
     const { username, password } = body;
 
     // Simple authentication logic for demonstration.
-    if (username === 'test' && password === 'test') {
+    if (username === 'azad-api-2025' && password === 'azad-api-2025') {
       res.statusCode = 200;
       res.setHeader('Content-Type', 'application/json');
       res.end(JSON.stringify({ 
