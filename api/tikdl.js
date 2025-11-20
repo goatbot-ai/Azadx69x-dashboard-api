@@ -5,7 +5,7 @@ module.exports = {
     name: "TikTok Downloader",
     version: "1.0.0",
     description: "Download tiktok videos without watermark.",
-    author: "Jr Busaco",
+    author: "Azad 💥",
     path: "/tikdl?url=",
     method: "get",
     category: "downloader"
