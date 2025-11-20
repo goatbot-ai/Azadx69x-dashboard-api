@@ -5,7 +5,7 @@ const meta = {
   name: "Spotify Downloader Search",
   version: "1.0.0",
   description: "API to search for a Spotify track based on a query and download it",
-  author: "AjiroDesu and Jr Busaco",
+  author: "Azad 💥",
   method: "get",
   category: "downloader",
   path: "/spotifysearch?search="
