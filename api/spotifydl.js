@@ -4,7 +4,7 @@ const meta = {
   name: "Spotify Downloader Link",
   version: "1.0.0",
   description: "API to fetch Spotify track info and download link",
-  author: "AjiroDesu and Jr Busaco", 
+  author: "Azad 💥", 
   method: "get",
   category: "downloader",
   path: "/spotifydl?url="
